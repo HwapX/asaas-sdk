@@ -11,9 +11,16 @@ class Connection
     public $api_status;
     public $base_url;
     public $headers;
+    public $useragent;
 
     public function __construct($token, $status)
     {
+        $this->useragent = 'CodePhix.Asaas/PHP';
+        if(defined('ASAAS_USERAGENT')){
+            $this->useragent = constant('ASAAS_USERAGENT');
+        } else if(!empty($_SERVER['HTTP_USER_AGENT'])){
+            $this->useragent = $_SERVER['HTTP_USER_AGENT'];
+        }
 
         if ($status == 'producao') {
             $this->api_status = false;
@@ -35,7 +42,7 @@ class Connection
         curl_setopt($ch, CURLOPT_URL, $this->base_url . '/v3' . $url . $option);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
 
 
         if (empty($this->headers)) {
@@ -77,7 +84,7 @@ class Connection
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         
-        curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json",
