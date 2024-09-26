@@ -106,7 +106,11 @@ class Cobranca
         return $this->http->get('/payments/' . $id, '', 'DELETE');
     }
 
-
+    // Reenvia a notificação da cobrança
+    public function reenviarNotificacao($id)
+    {
+        return $this->http->post("/payments/{$id}/resendNotification", []);
+    }
 
     // Retorna a listagem de cobranças de acordo com o Id da Assinaturas
     public function Carner($id)
